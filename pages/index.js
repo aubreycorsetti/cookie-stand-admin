@@ -1,28 +1,18 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import CreateForm from '../components/CreateForm';
-import BigHead from '../components/Head';
-import ReportTable from '../components/ReportTable';
+import Head from 'next/head';
 import { useState } from 'react';
+import Header from '../components/Header';
+import CreateForm from '../components/CreateForm';
+import ReportTable from '../components/ReportTable';
+import Footer from '../components/Footer.js';
+import LoginForm from '../components/LoginForm';
+import CookieStandAdmin from '../components/StandAdmin';
+import { useAuth } from '../contexts/auth';
+
+
 
 export default function Home() {
 
-  const [newLocations, setNewLocations] = useState([]);
-
-  function locationUpdateHandler(event) {
-    event.preventDefault();
-
-    const newLocation = {
-      hourly_sales: ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'],
-      location: event.target.location.value,
-      minCustomers: event.target.min.value,
-      maxCustomers: event.target.max.value,
-      avgCustomers: event.target.avg.value,
-
-    };
-
-    setNewLocations([...newLocations, newLocation]);
-  }
+  const { user, login } = useAuth();
 
   return (
     <>
@@ -33,22 +23,17 @@ export default function Home() {
           height: "1000px",
         }}
       >
+        <Head>
+              <title>Cookie Stand Admin</title>
+              </Head>
+            {user ?
+                <CookieStandAdmin />
+                :
+                <LoginForm onLogin={login} />
+            }
 
-        <BigHead />
-
-        <Header />
-
-        <main>
-
-          <CreateForm locationUpdateHandler={locationUpdateHandler}/>
-
-          <ReportTable setNewLocations={setNewLocations} newLocations={newLocations}/>
-
-
-        </main>
-
-        <Footer />
       </div>
     </>
   )
 }
+
